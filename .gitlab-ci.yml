@@ -1,0 +1,9 @@
+stages:
+  - test
+
+validate_html:
+  stage: test
+  script:
+    - apt-get update -qy
+    - apt-get install -y tidy
+    - tidy -e index.html second.html
