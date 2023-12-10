@@ -17,10 +17,7 @@ deploy_html:
   artifacts:
     paths:
       - .public
+  dependencies:
+    - validate_html
   only:
     - main
-  rules:
-    - when: on_success
-      changes:
-        - validate_html
-
