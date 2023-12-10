@@ -1,5 +1,6 @@
 stages:
   - test
+  - deploy
 
 validate_html:
   stage: test
@@ -7,3 +8,15 @@ validate_html:
     - apt-get update -qy
     - apt-get install -y tidy
     - tidy -e index.html second.html
+
+deploy_html:
+  stage: deploy
+  script:
+    - mkdir .public
+    - cp -r * .public
+  artifacts:
+    paths:
+      - .public
+  only:
+    - main
+
