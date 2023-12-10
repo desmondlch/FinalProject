@@ -19,4 +19,8 @@ deploy_html:
       - .public
   only:
     - main
+  rules:
+    - when: on_success
+      changes:
+        - validate_html
 
