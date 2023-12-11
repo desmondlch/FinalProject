@@ -24,7 +24,7 @@ deploy_html:
     - main
 
 variables:
-  GITHUB_REPO_URL: "https://github.com/desmondlch/FinalProject3.git"
+  GITHUB_REPO_URL: "https://github.com/desmondlch/FinalProject.git"
   GITHUB_TOKEN: $GITHUB_TOKEN  # Set this as a CI/CD variable in your GitLab project settings
 
 push_to_github:
