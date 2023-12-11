@@ -1,6 +1,7 @@
 stages:
   - test
   - deploy
+  - push_to_github
 
 validate_html:
   stage: test
@@ -21,3 +22,24 @@ deploy_html:
     - validate_html
   only:
     - main
+
+variables:
+  GITHUB_REPO_URL: "https://github.com/desmondlch/FinalProject3.git"
+  GITHUB_TOKEN: $GITHUB_TOKEN  # Set this as a CI/CD variable in your GitLab project settings
+
+push_to_github:
+  stage: push_to_github
+  script:
+    - git clone https://gitlab.com/desmondlch/finalproject.git
+    - cd finalproject
+    - git remote set-url origin $GITHUB_REPO_URL
+    - git config --global credential.helper store
+    - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > ~/.git-credentials
+    - git config --global user.email "desmondleongch@gmail.com"
+    - git config --global user.name "Desmond"
+    - git push origin main
+  dependencies:
+    - deploy_html
+  only:
+    - main
+
