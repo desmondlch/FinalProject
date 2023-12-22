@@ -1,45 +1,51 @@
+# You can override the included template(s) by including variable overrides
+# SAST customization: https://docs.gitlab.com/ee/user/application_security/sast/#customizing-the-sast-settings
+# Secret Detection customization: https://docs.gitlab.com/ee/user/application_security/secret_detection/#customizing-settings
+# Dependency Scanning customization: https://docs.gitlab.com/ee/user/application_security/dependency_scanning/#customizing-the-dependency-scanning-settings
+# Container Scanning customization: https://docs.gitlab.com/ee/user/application_security/container_scanning/#customizing-the-container-scanning-settings
+# Note that environment variables can be set in several places
+# See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 stages:
-  - test
-  - deploy
-  - push_to_github
-
+- test
+- deploy
+- push_to_github
 validate_html:
   stage: test
   script:
-    - apt-get update -qy
-    - apt-get install -y tidy
-    - tidy -e *.html
-
+  - apt-get update -qy
+  - apt-get install -y tidy
+  - tidy -e *.html
 deploy_html:
   stage: deploy
   script:
-    - mkdir .public
-    - cp -r * .public
+  - mkdir .public
+  - cp -r * .public
   artifacts:
     paths:
-      - .public
+    - ".public"
   dependencies:
-    - validate_html
+  - validate_html
   only:
-    - main
-
+  - main
 variables:
-  GITHUB_REPO_URL: "https://github.com/desmondlch/FinalProject.git"
-  GITHUB_TOKEN: $GITHUB_TOKEN  # Set this as a CI/CD variable in your GitLab project settings
-
+  GITHUB_REPO_URL: https://github.com/desmondlch/FinalProject.git
+  GITHUB_TOKEN: "$GITHUB_TOKEN"
 push_to_github:
   stage: push_to_github
   script:
-    - git clone https://gitlab.com/desmondlch/finalproject.git
-    - cd finalproject
-    - git remote set-url origin $GITHUB_REPO_URL
-    - git config --global credential.helper store
-    - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > ~/.git-credentials
-    - git config --global user.email "desmondleongch@gmail.com"
-    - git config --global user.name "Desmond"
-    - git push origin main
+  - git clone https://gitlab.com/desmondlch/finalproject.git
+  - cd finalproject
+  - git remote set-url origin $GITHUB_REPO_URL
+  - git config --global credential.helper store
+  - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > ~/.git-credentials
+  - git config --global user.email "desmondleongch@gmail.com"
+  - git config --global user.name "Desmond"
+  - git push origin main
   dependencies:
-    - deploy_html
+  - deploy_html
   only:
-    - main
-
+  - main
+sast:
+  stage: test
+include:
+- template: Security/SAST.gitlab-ci.yml
